@@ -13,7 +13,7 @@ class FailedAuthorizationResponse extends AbstractAuthorizationResponse
         return array_merge(
             parent::rules(),
             [
-                [['errorCode', 'errorMessage', 'errorDetail', 'pmethod','reqtype', 'acqErrorCode'], 'required'],
+                [['errorCode', 'errorMessage', 'errorDetail', 'pmethod','reqtype'], 'required'],
             ]
         );
     }

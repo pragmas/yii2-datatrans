@@ -2,7 +2,7 @@
 
 namespace pragmas\datatrans\models\Response;
 
-class SuccessfulAuthorizationResponse extends AbstractAuthorizationResponse
+class SuccessAuthorizationResponse extends AbstractAuthorizationResponse
 {
     public $calculatedSign2;
 

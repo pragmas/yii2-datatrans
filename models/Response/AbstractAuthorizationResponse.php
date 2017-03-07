@@ -7,16 +7,14 @@ use \yii\db\ActiveRecord;
 
 use pragmas\datatrans\DataInterface;
 use pragmas\datatrans\ValidationPatterns;
+use pragmas\datatrans\ValidationHelpers;
 
 abstract class AbstractAuthorizationResponse extends ActiveRecord implements DataInterface, ValidationPatterns
 {
     /**
-     * @inheritdoc
+     * @var ValidationHelpers
      */
-    public function encryptData($data, $key, $algo) {
-        $keyBin = hex2bin($key);
-        return hash_hmac( $algo, $data, $keyBin);
-    }
+    public $helpers;
 
     /**
      * @var string
@@ -133,37 +131,46 @@ abstract class AbstractAuthorizationResponse extends ActiveRecord implements Dat
      */
     public $DccRate;
 
+    /**
+     * initiate helpers
+     * - function to encrypt sign key
+     * - function to get datatrans constants by prefix
+     */
+    public function init() {
+        $this->helpers = new ValidationHelpers();
+    }
+
     public function isValidStatus($attribute, $params, $validator)
     {
-        if (!in_array($this->$attribute, array_keys(\Dominikzogg\ClassHelpers\getConstantsWithPrefix(__CLASS__, 'RESPONSESTATUS_')))) {
+        if (!in_array($this->$attribute, array_keys($this->helpers->getClassConstantsByPrefix(__CLASS__, 'RESPONSESTATUS_')))) {
             $this->addError($attribute, "Attribute $attribute '{$this->$attribute}' out of bounds.");
         }
     }
 
     public function isValidResponseCode($attribute, $params, $validator)
     {
-        if (!in_array($this->$attribute, array_keys(\Dominikzogg\ClassHelpers\getConstantsWithPrefix(__CLASS__, 'RESPONSECODE_')))) {
+        if (!in_array($this->$attribute, array_keys($this->helpers->getClassConstantsByPrefix(__CLASS__, 'RESPONSECODE_')))) {
             $this->addError($attribute, "Attribute $attribute '{$this->$attribute}' out of bounds.");
         }
     }
 
     public function isValidReqtype($attribute, $params, $validator)
     {
-        if (!in_array($this->$attribute, array_keys(\Dominikzogg\ClassHelpers\getConstantsWithPrefix(__CLASS__, 'REQTYPE_')))) {
+        if (!in_array($this->$attribute, array_keys($this->helpers->getClassConstantsByPrefix(__CLASS__, 'REQTYPE_')))) {
             $this->addError($attribute, "Attribute $attribute '{$this->$attribute}' out of bounds.");
         }
     }
 
     public function isValidPayment($attribute, $params, $validator)
     {
-        if (!in_array($this->$attribute, array_keys(\Dominikzogg\ClassHelpers\getConstantsWithPrefix(__CLASS__, 'PAYMENTMETHOD_')))) {
+        if (!in_array($this->$attribute, array_keys($this->helpers->getClassConstantsByPrefix(__CLASS__, 'PAYMENTMETHOD_')))) {
             $this->addError($attribute, "Attribute $attribute '{$this->$attribute}' out of bounds.");
         }
     }
 
     public function isValidUppMsgType($attribute, $params, $validator)
     {
-        if (!in_array($this->$attribute, array_keys(\Dominikzogg\ClassHelpers\getConstantsWithPrefix(__CLASS__, 'MSGTYPE_')))) {
+        if (!in_array($this->$attribute, array_keys($this->helpers->getClassConstantsByPrefix(__CLASS__, 'MSGTYPE_')))) {
             $this->addError($attribute, "Attribute $attribute '{$this->$attribute}' out of bounds.");
         }
     }
